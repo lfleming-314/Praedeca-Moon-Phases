@@ -8,8 +8,8 @@ const atyniaCalendar = {
 
 const standardCalendar = {
 	startingYear: 1,
-	months: ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen"],
-	monthLength: 25,
+	months: ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"],
+	monthLength: 40,
 	weekdays: ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"],
 	dayOffset: 0
 };
@@ -71,40 +71,27 @@ $('#nameset').change(function() {
 
 //set working calendar
 let workingCalendar = $('#calendar').val() == "atynia" ? atyniaCalendar : standardCalendar;
-$('#month1').text(workingCalendar.months[0]);
-$('#month2').text(workingCalendar.months[1]);
-$('#month3').text(workingCalendar.months[2]);
-$('#month4').text(workingCalendar.months[3]);
-$('#month5').text(workingCalendar.months[4]);
-$('#month6').text(workingCalendar.months[5]);
-$('#month7').text(workingCalendar.months[6]);
-$('#month8').text(workingCalendar.months[7]);
-$('#month9').text(workingCalendar.months[8]);
-$('#month10').text(workingCalendar.months[9]);
-$('#month11').text(workingCalendar.months[10]);
-$('#month12').text(workingCalendar.months[11]);
-$('#month13').text(workingCalendar.months[12]);
-$('#month14').text(workingCalendar.months[13]);
-$('#month15').text(workingCalendar.months[14]);
-$('#month16').text(workingCalendar.months[15]);
+let numMonths = workingCalendar.months.length;
+for (let i = 0; i < numMonths; i++) {
+	$('#month').append(new Option(workingCalendar.months[i], i+1));
+}
+for (let i = 0; i < workingCalendar.monthLength; i++) {
+	$('#day').append(new Option(i+1, i+1));
+}
 $('#calendar').change(function () {
+	let t = calcT(Number($('#month').val()), Number($('#day').val()), Number($('#year').val()));
+	console.log("current", t);
+	
 	workingCalendar = $('#calendar').val() == "atynia" ? atyniaCalendar : standardCalendar;
-	$('#month1').text(workingCalendar.months[0]);
-	$('#month2').text(workingCalendar.months[1]);
-	$('#month3').text(workingCalendar.months[2]);
-	$('#month4').text(workingCalendar.months[3]);
-	$('#month5').text(workingCalendar.months[4]);
-	$('#month6').text(workingCalendar.months[5]);
-	$('#month7').text(workingCalendar.months[6]);
-	$('#month8').text(workingCalendar.months[7]);
-	$('#month9').text(workingCalendar.months[8]);
-	$('#month10').text(workingCalendar.months[9]);
-	$('#month11').text(workingCalendar.months[10]);
-	$('#month12').text(workingCalendar.months[11]);
-	$('#month13').text(workingCalendar.months[12]);
-	$('#month14').text(workingCalendar.months[13]);
-	$('#month15').text(workingCalendar.months[14]);
-	$('#month16').text(workingCalendar.months[15]);
+	$('#month').empty();
+	let numMonths = workingCalendar.months.length;
+	for (let i = 0; i < numMonths; i++) {
+		$('#month').append(new Option(workingCalendar.months[i], i+1));
+	}
+	$('#day').empty();
+	for (let i = 0; i < workingCalendar.monthLength; i++) {
+		$('#day').append(new Option(i+1, i+1));
+	}
 	
 	if ($('#nameset').val() == "draconic") {
 		moons.smarda.workingName = $('#calendar').val() == "atynia" ? moons.smarda.atyniaDraconic : moons.smarda.draconic;
@@ -112,7 +99,11 @@ $('#calendar').change(function () {
 		moons.smarda.workingName = moons.smarda.celestial;
 	}
 	$('#smardaName').text(moons.smarda.workingName);
-	calculateMoons();
+	console.log("same?", t);
+	setDateFromT(t);
+	console.log("set", t);
+	calcWeekday(t);
+	console.log("hello", t);
 });
 	
 
@@ -205,9 +196,9 @@ $('#calendar').change(function () {
 	
 	$('#prevday').click(function() {
 		if ($('#day').val() == 1) {
-			$('#day').val(25);
+			$('#day').val(workingCalendar.monthLength);
 			if ($('#month').val() == 1) {
-				$('#month').val(16);
+				$('#month').val(workingCalendar.months.length);
 				current = $('#year').val();
 				
 				if (current == 1 && workingCalendar.startingYear != 0) {
@@ -226,9 +217,9 @@ $('#calendar').change(function () {
 	});
 	
 	$('#nextday').click(function() {
-		if ($('#day').val() == 25) {
+		if ($('#day').val() == workingCalendar.monthLength) {
 			$('#day').val(1);
-			if ($('#month').val() == 16) {
+			if ($('#month').val() == workingCalendar.months.length) {
 				$('#month').val(1);
 				current = Number($('#year').val());
 				
@@ -336,7 +327,7 @@ $('#calendar').change(function () {
 		
 		if (t >= 0) {
 			let trem = t % daysPerYear;
-			setYear = t - trem + workingCalendar.startingYear;
+			setYear = ((t - trem) / daysPerYear) + workingCalendar.startingYear;
 			
 			let t2rem = trem % daysPerMonth;
 			setMonth = 1+ (trem - t2rem) / daysPerMonth;
@@ -344,10 +335,10 @@ $('#calendar').change(function () {
 			setDay = t2rem + 1;
 			
 		} else {
-			let trem = t % daysPerYear; //-25
+			let trem = t % daysPerYear;
 			setYear = t - trem - 1;
 			
-			let t2rem = trem % daysPerMonth; //0
+			let t2rem = trem % daysPerMonth;
 			setMonth = monthsPerYear + ((trem - t2rem) / daysPerMonth);
 			
 			setDay = daysPerMonth + t2rem;
@@ -403,6 +394,7 @@ $('#calendar').change(function () {
 	}
 	
 	function calcT(month, day, year) {
+		console.log(month, day, year);
 		let t = 0;
 		
 		let monthsPerYear = workingCalendar.months.length;
@@ -424,7 +416,7 @@ $('#calendar').change(function () {
 			t -= (monthsPerYear - month) * daysPerMonth;
 			t -= (daysPerMonth - day + 1);
 		}
-				
+		
 		return t;
 	}
 	

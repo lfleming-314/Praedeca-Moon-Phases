@@ -526,8 +526,8 @@ $('#calendar').change(function () {
 		if (pos == 360 || pos == 0) { return "New Moon"; }
 		if (pos < 90) { return "Waxing Crescent"; }
 		if (pos == 90) { return "First Quarter"; }
-		if (pos < 179) { return "Waxing Gibbous"; }
-		if (pos < 180.5) { return "Full Moon"; }
+		if (pos < 180) { return "Waxing Gibbous"; }
+		if (pos == 180) { return "Full Moon"; }
 		if (pos < 270) { return "Waning Gibbous"; }
 		if (pos == 270) { return "Last Quarter"; }
 		if (pos < 360) { return "Waning Crescent"; }

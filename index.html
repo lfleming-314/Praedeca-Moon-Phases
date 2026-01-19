@@ -9,32 +9,38 @@
 </head>
 <body>
 	<div id='formdiv'>
-		<div id="calendardiv">
-			Calendar: <select id='calendar'>
-				<option>Salix</option>
-				<option>Senna</option>
+		<div id="namesetdiv">
+			Language: <select id='nameset'>
+				<option value="draconic">Draconic</option>
+				<option value="celestial" >Celestial</option>
 			</select>
 		</div>
-		<div id='biennialdiv'>
+		<div id="calendardiv">
 			&emsp;
-			Biennial: <input type='checkbox' id='biennial'></input>
+			Calendar: <select id='calendar'>
+				<option value="atynia">Atynia</option>
+				<option value="standard">Nythean Standard</option>
+			</select>
 		</div>
 		<div id='monthday'>
 			&emsp;
 			Month: <select id='month'>
-				<option value='1'>1</option>
-				<option value='2'>2</option>
-				<option value='3'>3</option>
-				<option value='4'>4</option>
-				<option value='5'>5</option>
-				<option value='6'>6</option>
-				<option value='7'>7</option>
-				<option value='8'>8</option>
-				<option value='9'>9</option>
-				<option value='10'>10</option>
-				<option value='11'>11</option>
-				<option value='12'>12</option>
-				<option value='13'>13</option>
+				<option value='1' id='month1'></option>
+				<option value='2' id='month2'></option>
+				<option value='3' id='month3'></option>
+				<option value='4' id='month4'></option>
+				<option value='5' id='month5'></option>
+				<option value='6' id='month6'></option>
+				<option value='7' id='month7'></option>
+				<option value='8' id='month8'></option>
+				<option value='9' id='month9'></option>
+				<option value='10' id='month10'></option>
+				<option value='11' id='month11'></option>
+				<option value='12' id='month12'></option>
+				<option value='13' id='month13'></option>
+				<option value='14' id='month14'></option>
+				<option value='15' id='month15'></option>
+				<option value='16' id='month16'></option>
 			</select>
 			&emsp;
 			Day: <select id='day'>
@@ -63,21 +69,12 @@
 				<option value='23'>23</option>
 				<option value='24'>24</option>
 				<option value='25'>25</option>
-				<option value='26'>26</option>
-				<option value='27'>27</option>
-				<option value='28'>28</option>
 			</select>
 		</div>
 		<div>
 			&emsp;
 			Year: <input id='year'></input>
 			&emsp;
-		</div>
-		<div>
-			Saros: <select id='saros'>
-				<option value='1'>1</option>
-				<option value='2'>2</option>
-			</select>
 		</div>
 		
 	</div>
@@ -87,6 +84,7 @@
 			<button type='button' id='preveclipse'><< Eclipse</button>
 			<button type='button' id='prevday'><< Day</button>
 		</div>
+		<h1 id='weekday'></h1>
 		<div class='buttonCol'>
 			<button type='button' id='nextday'>Day >></button>
 			<button type='button' id='nexteclipse'>Eclipse >></button>
@@ -97,25 +95,25 @@
 	<div id='errors'></div>
 		
 	<div id='moondisplay' class='horizontal'>
-		<div id='smardadiv' class='moondiv green'>
-			<h1>Smarda</h1>
-			<canvas id="scanvas" width="200" height="200vw"></canvas>
-			<h1 id='sinfo'></h1>
-		</div>
 		<div id='prothadiv' class='moondiv gray'>
-			<h1>Protha</h1>
-			<canvas id="pcanvas" width="200" height="200"></canvas>
-			<h1 id='pinfo'></h1>
+				<h1 id='prothaName'></h1>
+				<canvas id="pcanvas" width="200" height="200"></canvas>
+				<h1 id='pinfo'></h1>
 		</div>
 		<div id='tyrathadiv' class='moondiv red'>
-			<h1>Tyratha</h1>
+			<h1 id='tyrathaName'></h1>
 			<canvas id="tcanvas" width="200" height="200"></canvas>
 			<h1 id='tinfo'></h1>
 		</div>
 		<div id='adezodiv' class='moondiv black'>
-			<h1>Adezo</h1>
+			<h1 id='adezoName'></h1>
 			<canvas id="acanvas" width="200" height="200"></canvas>
 			<h1 id='ainfo'></h1>
+		</div>
+		<div id='smardadiv' class='moondiv green'>
+			<h1 id='smardaName'></h1>
+			<canvas id="scanvas" width="200" height="200vw"></canvas>
+			<h1 id='sinfo'></h1>
 		</div>
 	</div>
 	

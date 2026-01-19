@@ -1,3 +1,26 @@
+const atyniaCalendar = {
+	startingYear: 1,
+	months: ["Protanox", "Deftanox", "Tritanox", "Tertanox", "Prokalok", "Defkalok", "Trikalok", "Terkalok", "Prothin", "Defthin", "Trithin", "Terthin", "Prochem", "Defchem", "Trichem", "Terchem"],
+	monthLength: 25,
+	weekdays: ["Othirhal", "Malehal", "Lukahal", "Bahrohal", "Laevohal", "Suyasarhal", "Saldrehal", "Kralorhal"],
+	dayOffset: 0
+};
+
+const standardCalendar = {
+	startingYear: 1,
+	months: ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen"],
+	monthLength: 25,
+	weekdays: ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"],
+	dayOffset: 0
+};
+
+const moons = {
+	smarda: {orbit: 25, offset: 0, celestial: "Eovena", draconic: "Ainissa", atyniaDraconic: "Smarda", color: '#548235', direction: '1', workingName: ""},
+	protha: {orbit: 40, offset: 0, celestial: "Arsomna", draconic: "Protha", color: '#A5A5A5', direction: '1', workingName: ""},
+	tyratha: {orbit: 80, offset: 0, celestial: "Gilvida", draconic: "Tyratha", color: '#C00000', direction: '1', workingName: ""},
+	adezo: {orbit: 401, offset: 0, celestial: "Halmenda", draconic: "Adezo", color: '#a341aa', direction: '1', workingName: ""}
+};
+
 const smardaTxt = new Image();
 smardaTxt.src = "smarda-texture.png";
 
@@ -9,6 +32,89 @@ prothaTxt.src = "protha-texture.png";
 
 const adezoTxt = new Image();
 adezoTxt.src = "adezo-texture.png";
+
+//initialize moon name labels
+if ($('#nameset').val() == "draconic") {
+	moons.smarda.workingName = $('#calendar').val() == "atynia" ? moons.smarda.atyniaDraconic : moons.smarda.draconic;
+	moons.protha.workingName = moons.protha.draconic;
+	moons.tyratha.workingName = moons.tyratha.draconic;
+	moons.adezo.workingName = moons.adezo.draconic;
+} else { //value = "celestial"
+	moons.smarda.workingName = moons.smarda.celestial;
+	moons.protha.workingName = moons.protha.celestial;
+	moons.tyratha.workingName = moons.tyratha.celestial;
+	moons.adezo.workingName = moons.adezo.celestial;
+}
+$('#smardaName').text(moons.smarda.workingName);
+$('#prothaName').text(moons.protha.workingName);
+$('#tyrathaName').text(moons.tyratha.workingName);
+$('#adezoName').text(moons.adezo.workingName);
+
+$('#nameset').change(function() {
+	if ($('#nameset').val() == "draconic") {
+		moons.smarda.workingName = $('#calendar').val() == "atynia" ? moons.smarda.atyniaDraconic : moons.smarda.draconic;
+		moons.protha.workingName = moons.protha.draconic;
+		moons.tyratha.workingName = moons.tyratha.draconic;
+		moons.adezo.workingName = moons.adezo.draconic;
+	} else { //value = "celestial"
+		moons.smarda.workingName = moons.smarda.celestial;
+		moons.protha.workingName = moons.protha.celestial;
+		moons.tyratha.workingName = moons.tyratha.celestial;
+		moons.adezo.workingName = moons.adezo.celestial;
+	}
+	$('#smardaName').text(moons.smarda.workingName);
+	$('#prothaName').text(moons.protha.workingName);
+	$('#tyrathaName').text(moons.tyratha.workingName);
+	$('#adezoName').text(moons.adezo.workingName);
+	calculateMoons();
+})
+
+//set working calendar
+let workingCalendar = $('#calendar').val() == "atynia" ? atyniaCalendar : standardCalendar;
+$('#month1').text(workingCalendar.months[0]);
+$('#month2').text(workingCalendar.months[1]);
+$('#month3').text(workingCalendar.months[2]);
+$('#month4').text(workingCalendar.months[3]);
+$('#month5').text(workingCalendar.months[4]);
+$('#month6').text(workingCalendar.months[5]);
+$('#month7').text(workingCalendar.months[6]);
+$('#month8').text(workingCalendar.months[7]);
+$('#month9').text(workingCalendar.months[8]);
+$('#month10').text(workingCalendar.months[9]);
+$('#month11').text(workingCalendar.months[10]);
+$('#month12').text(workingCalendar.months[11]);
+$('#month13').text(workingCalendar.months[12]);
+$('#month14').text(workingCalendar.months[13]);
+$('#month15').text(workingCalendar.months[14]);
+$('#month16').text(workingCalendar.months[15]);
+$('#calendar').change(function () {
+	workingCalendar = $('#calendar').val() == "atynia" ? atyniaCalendar : standardCalendar;
+	$('#month1').text(workingCalendar.months[0]);
+	$('#month2').text(workingCalendar.months[1]);
+	$('#month3').text(workingCalendar.months[2]);
+	$('#month4').text(workingCalendar.months[3]);
+	$('#month5').text(workingCalendar.months[4]);
+	$('#month6').text(workingCalendar.months[5]);
+	$('#month7').text(workingCalendar.months[6]);
+	$('#month8').text(workingCalendar.months[7]);
+	$('#month9').text(workingCalendar.months[8]);
+	$('#month10').text(workingCalendar.months[9]);
+	$('#month11').text(workingCalendar.months[10]);
+	$('#month12').text(workingCalendar.months[11]);
+	$('#month13').text(workingCalendar.months[12]);
+	$('#month14').text(workingCalendar.months[13]);
+	$('#month15').text(workingCalendar.months[14]);
+	$('#month16').text(workingCalendar.months[15]);
+	
+	if ($('#nameset').val() == "draconic") {
+		moons.smarda.workingName = $('#calendar').val() == "atynia" ? moons.smarda.atyniaDraconic : moons.smarda.draconic;
+	} else { //value = "celestial"
+		moons.smarda.workingName = moons.smarda.celestial;
+	}
+	$('#smardaName').text(moons.smarda.workingName);
+	calculateMoons();
+});
+	
 
 // MoonPainter code modified from https://codepen.io/anowodzinski/pen/ZWKXPQ
 	function MoonPainter( canvas, color, texture ) {
@@ -78,10 +184,10 @@ adezoTxt.src = "adezo-texture.png";
 		}
 	}
 
-	var spainter = new MoonPainter( document.getElementById( 'scanvas' ), 'Green', smardaTxt );
-	var ppainter = new MoonPainter( document.getElementById( 'pcanvas' ), 'Gray', prothaTxt );
-	var tpainter = new MoonPainter( document.getElementById( 'tcanvas' ), 'Red', tyrathaTxt );
-	var apainter = new MoonPainter( document.getElementById( 'acanvas' ), 'Black', adezoTxt );
+	var spainter = new MoonPainter( document.getElementById( 'scanvas' ), moons.smarda.color, smardaTxt );
+	var ppainter = new MoonPainter( document.getElementById( 'pcanvas' ), moons.protha.color, prothaTxt );
+	var tpainter = new MoonPainter( document.getElementById( 'tcanvas' ), moons.tyratha.color, tyrathaTxt );
+	var apainter = new MoonPainter( document.getElementById( 'acanvas' ), moons.adezo.color, adezoTxt );
 
 	function repaint(painter, currentPhase) {
 		if (document.getElementById('calendar').value == "Salix") {
@@ -95,78 +201,48 @@ adezoTxt.src = "adezo-texture.png";
 	let monthsPerYear = 13;
 	let yearsPerSaros = 2475;
 	
-	checkFields();
 	calculateMoons();
 	
 	$('#prevday').click(function() {
-		if ($('#biennial').prop("checked")) {
-			$('#biennial').prop("checked", false);
-			$('#monthday').show();
-			$('#month').val(13);
-			$('#day').val(28);
-			current = $('#year').val();
-			if (current == 0) {
-				$('#saros').val(1);
-				$('#year').val(yearsPerSaros-1);
-				$('#biennialdiv').hide();
-			} else {
+		if ($('#day').val() == 1) {
+			$('#day').val(25);
+			if ($('#month').val() == 1) {
+				$('#month').val(16);
+				current = $('#year').val();
+				
+				if (current == 1 && workingCalendar.startingYear != 0) {
+					current = 0;
+				}
 				$('#year').val(current-1);
+			} else {
+				current = $('#month').val();
+				$('#month').val(current-1);
 			}
 		} else {
-			if ($('#day').val() == 1) {
-				$('#day').val(28);
-				if ($('#month').val() == 1) {
-					$('#month').val(13);
-					if (($('#year').val() % 2) == 0 && $('#saros').val() == 2) {
-						$('#biennial').prop("checked", true);
-						$('#monthday').hide();
-					} else {
-						current = $('#year').val();
-						$('#year').val(current-1);
-					}
-				} else {
-					current = $('#month').val();
-					$('#month').val(current-1);
-				}
-			} else {
-				current = $('#day').val();
-				$('#day').val(current-1);
-			}
+			current = $('#day').val();
+			$('#day').val(current-1);
 		}
 		calculateMoons();
 	});
 	
 	$('#nextday').click(function() {
-		if ($('#biennial').prop("checked")) {
-			$('#biennial').prop("checked", false);
-			$('#monthday').show();
-			$('#month').val(1);
+		if ($('#day').val() == 25) {
 			$('#day').val(1);
-			current = $('#year').val();
-		} else if ($('#year').val() == 2474 && $('#saros').val() == 1 && $('#month').val() == 13 && $('#day').val() == 28) {
-			$('#saros').val(2);
-			$('#year').val(0);
-			$('#biennial').prop("checked", true);
-			$('#monthday').hide();
-			$('#biennialdiv').show();
-		} else {
-			if ($('#day').val() == 28) {
-				$('#day').val(1);
-				if ($('#month').val() == 13) {
-					$('#month').val(1);
-					if (($('#year').val() % 2) != 0 && $('#saros').val() == 2) {
-						$('#biennial').click();
-					}
-					current = Number($('#year').val());
-					$('#year').val(current+1);
-				} else {
-					current = Number($('#month').val());
-					$('#month').val(current+1);
+			if ($('#month').val() == 16) {
+				$('#month').val(1);
+				current = Number($('#year').val());
+				
+				if (current == -1 && workingCalendar.startingYear != 0) {
+					current = 0;
 				}
+				$('#year').val(current+1);
 			} else {
-				current = Number($('#day').val());
-				$('#day').val(current+1);
+				current = Number($('#month').val());
+				$('#month').val(current+1);
 			}
+		} else {
+			current = Number($('#day').val());
+			$('#day').val(current+1);
 		}
 		calculateMoons();
 	});
@@ -175,11 +251,10 @@ adezoTxt.src = "adezo-texture.png";
 		let month = Number($('#month').val());
 		let day = Number($('#day').val());
 		let year = Number($('#year').val());
-		let saros = Number($('#saros').val());
-		let t = calcT(month, day, year, saros, $('#biennial').prop("checked"));
+		let t = calcT(month, day, year);
 		
 		let found = false;
-		while (t >= 300300 && !found) {
+		while (!found) {
 			t --;
 			let [olurisPos, syldricPos, caphrielPos, lysoPos] = calcPositions(t);
 			let [os, oc, ol, sc, sl, cl] = calcDiffs(olurisPos, syldricPos, caphrielPos, lysoPos);
@@ -196,8 +271,7 @@ adezoTxt.src = "adezo-texture.png";
 		let month = Number($('#month').val());
 		let day = Number($('#day').val());
 		let year = Number($('#year').val());
-		let saros = Number($('#saros').val());
-		let t = calcT(month, day, year, saros, $('#biennial').prop("checked"));
+		let t = calcT(month, day, year);
 		
 		let found = false;
 		while (!found) {
@@ -217,8 +291,7 @@ adezoTxt.src = "adezo-texture.png";
 		let month = Number($('#month').val());
 		let day = Number($('#day').val());
 		let year = Number($('#year').val());
-		let saros = Number($('#saros').val());
-		let t = calcT(month, day, year, saros, $('#biennial').prop("checked"));
+		let t = calcT(month, day, year);
 		
 		let found = false;
 		while (t >= 300300 && !found) {
@@ -238,8 +311,7 @@ adezoTxt.src = "adezo-texture.png";
 		let month = Number($('#month').val());
 		let day = Number($('#day').val());
 		let year = Number($('#year').val());
-		let saros = Number($('#saros').val());
-		let t = calcT(month, day, year, saros, $('#biennial').prop("checked"));
+		let t = calcT(month, day, year);
 		
 		let found = false;
 		while (!found) {
@@ -255,209 +327,102 @@ adezoTxt.src = "adezo-texture.png";
 		setDateFromT(t);
 	});
 	
-	function checkFields() {
-		if (Number($('#saros').val()) == 1 || Number($('#year').val()) % 2 == 1) {
-			$('#biennialdiv').hide();
-			$('#monthday').show();
-			$('#biennial').prop("checked", false);
-		} else {
-			$('#biennialdiv').show();
-			if ($('#biennial').prop("checked") == true) {
-				$('#monthday').hide();
-			} else {
-				$('#monthday').show();
-			}
-				
-		}
-	}
-		
-	
 	function setDateFromT(t) {
-		if (t < 1201200) {
-			$("#saros").val(1);
-			$('#biennialdiv').hide();
-			$('#monthday').show();
+		
+		let monthsPerYear = workingCalendar.months.length;
+		let daysPerMonth = workingCalendar.monthLength;
+		let daysPerYear = monthsPerYear * daysPerMonth;
+		let setYear, setMonth, setDay;
+		
+		if (t >= 0) {
+			let trem = t % daysPerYear;
+			setYear = t - trem + workingCalendar.startingYear;
 			
-			t -= 300300;
-			tRem = t % 364;
-			newYear = (t - tRem) / 364;
-			newDay = (tRem % 28) + 1;
-			newMonth = (tRem - (tRem % 28)) / 28 + 1;
+			let t2rem = trem % daysPerMonth;
+			setMonth = 1+ (trem - t2rem) / daysPerMonth;
 			
-			$('#year').val(newYear);
-			$('#month').val(newMonth);
-			$('#day').val(newDay);
+			setDay = t2rem + 1;
 			
 		} else {
-			$("#saros").val(2);
-			$('#biennialdiv').show();
+			let trem = t % daysPerYear; //-25
+			setYear = t - trem - 1;
 			
-			t -= 1201200;
+			let t2rem = trem % daysPerMonth; //0
+			setMonth = monthsPerYear + ((trem - t2rem) / daysPerMonth);
 			
-			t2rem = t % 729;
-			
-			newYear = (t - t2rem) / 729 * 2;
-			
-			if (t2rem > 364) {
-				t2rem -= 364;
-				newYear += 1;
-			}
-			
-			t2rem -= 1;
-			
-			newDay = (t2rem % 28) + 1;
-			newMonth = (t2rem - (t2rem % 28)) / 28 + 1;
-			
-			if (t2rem == 0) {
-				$('#biennial').prop("checked", true);
-				$('#monthday').hide();
-			}
-			
-			$('#year').val(newYear);
-			$('#month').val(newMonth);
-			$('#day').val(newDay);
-			
+			setDay = daysPerMonth + t2rem;
 		}
 		
+		$('#year').val(setYear);
+		$('#month').val(setMonth);
+		$('#day').val(setDay);
 		calculateMoons();
 	}
-	
-	if ($('#biennial').prop("checked") && $('#saros').val() == '2') {
-		$('#monthday').hide();
-	} else {
-		$('#monthday').show();
-	}
-	
-	$('#biennial').click(function() {
-		if ($('#saros').val() == 2) {
-			if ($('#biennial').prop("checked")) {
-				$('#monthday').hide();
-			} else {
-				$('#monthday').show();
-			}
-		}
-	});
-	
-	if ($('#saros').val() == '1') {
-		$('#biennialdiv').hide();
-	} else {
-		$('#biennialdiv').show();
-	}
-	
-	$('#planetoid').change(function() { calculateMoons() });
-	$('#biennial').change(function() { calculateMoons() });
+
 	$('#month').change(function() { calculateMoons() });
 	$('#day').change(function() { calculateMoons() });
 	$('#year').change(function() { calculateMoons() });
-	$('#saros').change(function() { 
-		$('#biennialdiv').toggle();
-		if ($('#saros').val() == '1') {
-			$('#monthday').show();
-		} else if ($('#biennial').prop("checked")) {
-			$('#monthday').hide();
-		}
-		calculateMoons();
-	});
+
 	
 	function calcPositions(t) {
-		//offset of lunar nodes
-		let degPerYear = 240 / 825;
-		let degPerDayPreRift = degPerYear / (daysPerMonth * monthsPerYear);
-		let degPerDayPostRift = degPerYear / ((daysPerMonth * monthsPerYear) + .5);
 		
-		let olurisOrbit = 28;
-		let syldricOrbit = -44;
-		let caphrielOrbit = -100;
-		let lysoOrbit = 156;
+		let smardaAngVel = 360 / moons.smarda.orbit;
+		let prothaAngVel = 360 / moons.protha.orbit;
+		let tyrathaAngVel = 360 / moons.tyratha.orbit;
+		let adezoAngVel = 360 / moons.adezo.orbit;
 		
-		let olurisAngVel = 360 / olurisOrbit;
-		let syldricAngVel = 360 / syldricOrbit;
-		let caphrielAngVel = 360 / caphrielOrbit;
-		let lysoAngVel = 360 / lysoOrbit;
+		let smardaPos = moons.smarda.offset * smardaAngVel;
+		let prothaPos = moons.protha.offset * prothaAngVel;
+		let tyrathaPos = moons.tyratha.offset * tyrathaAngVel;
+		let adezoPos = moons.adezo.offset * adezoAngVel;
 		
-		let olurisPos = 0;
-		let syldricPos = 0;
-		let caphrielPos = 0;
-		let lysoPos = 0;
+		smardaPos += t * smardaAngVel * moons.smarda.direction;
+		prothaPos += t * prothaAngVel * moons.protha.direction;
+		tyrathaPos += t * tyrathaAngVel * moons.tyratha.direction;
+		adezoPos += t * adezoAngVel * moons.adezo.direction;
 		
-		let olurisTotVelPreRift = olurisAngVel + degPerDayPreRift;
-		let syldricTotVelPreRift = syldricAngVel + degPerDayPreRift;
-		let caphrielTotVelPreRift = caphrielAngVel + degPerDayPreRift;
-		let lysoTotVelPreRift = lysoAngVel + degPerDayPreRift;
+		smardaPos = smardaPos % 360;
+		prothaPos = prothaPos % 360;
+		tyrathaPos = tyrathaPos % 360;
+		adezoPos = adezoPos % 360;
+
+		if (smardaPos < 0) {
+			smardaPos += 360;
+		}
+		if (prothaPos < 0) {
+			prothaPos += 360;
+		}
+		if (tyrathaPos < 0) {
+			tyrathaPos += 360;
+		}
+		if (adezoPos < 0) {
+			adezoPos += 360;
+		}
 	
-		if ( t < 1201200) { //1st saros
-			olurisPos = ((t * olurisTotVelPreRift) % 360);
-			syldricPos = ((t * syldricTotVelPreRift) % 360);
-			caphrielPos = ((t * caphrielTotVelPreRift) % 360);
-			lysoPos = ((t * lysoTotVelPreRift) % 360);
-			
-		} else { //2nd saros
-			let olurisTotVelPostRift = olurisAngVel + degPerDayPostRift;
-			let syldricTotVelPostRift = syldricAngVel + degPerDayPostRift;
-			let caphrielTotVelPostRift = caphrielAngVel + degPerDayPostRift;
-			let lysoTotVelPostRift = lysoAngVel + degPerDayPostRift;
-			
-			let lastDayOfFirstSaros = 1201200 - 1;
-			
-			let daysOfSecondSaros = t - lastDayOfFirstSaros;
-			
-			let olurisPosRift = lastDayOfFirstSaros * olurisTotVelPreRift;
-			let syldricPosRift = lastDayOfFirstSaros * syldricTotVelPreRift;
-			let caphrielPosRift = lastDayOfFirstSaros * caphrielTotVelPreRift;
-			let lysoPosRift = lastDayOfFirstSaros * lysoTotVelPreRift;
-			
-			olurisPos = (olurisPosRift + (daysOfSecondSaros * olurisTotVelPostRift)) % 360;
-			syldricPos = (syldricPosRift + (daysOfSecondSaros * syldricTotVelPostRift)) % 360;
-			caphrielPos = (caphrielPosRift + (daysOfSecondSaros * caphrielTotVelPostRift)) % 360;
-			lysoPos = (lysoPosRift + (daysOfSecondSaros * lysoTotVelPostRift)) % 360;
-		}
-		
-		olurisPos = Math.round(olurisPos * 100) / 100;
-		syldricPos = Math.round(syldricPos * 100) / 100;
-		caphrielPos = Math.round(caphrielPos * 100) / 100;
-		lysoPos = Math.round(lysoPos * 100) / 100;
-		
-		if (olurisPos < 0) {
-			olurisPos += 360;
-		}
-		if (syldricPos < 0) {
-			syldricPos += 360;
-		}
-		if (caphrielPos < 0) {
-			caphrielPos += 360;
-		}
-		if (lysoPos < 0) {
-			lysoPos += 360;
-		}
-		
-		return [olurisPos, syldricPos, caphrielPos, lysoPos];
+		return [smardaPos, prothaPos, tyrathaPos, adezoPos];
 	}
 	
-	function calcT(month, day, year, saros, biennial) {
+	function calcT(month, day, year) {
 		let t = 0;
-		if (saros == 2 && year % 2 != 0 && biennial) {
-			$('#errors').append("<p>Error: No biennial on odd year.</p>");
-		} else {
 		
-			//calculate t
+		let monthsPerYear = workingCalendar.months.length;
+		let daysPerMonth = workingCalendar.monthLength;
+		
+		if (year >= 0) { 
+			year = year - workingCalendar.startingYear; 
 			
-			t += year * daysPerMonth * monthsPerYear;
-			if (saros == 2) {
-				t += 1201200;
-				let num_biennials = (year - (year % 2)) / 2;
-				t += num_biennials;
-				if (!$('#biennial').prop("checked")) {
-					t += (month - 1) * daysPerMonth;
-					t += day;
-				}
-			}
+			t += year * monthsPerYear * daysPerMonth;
 			
-			if (saros == 1) {
-				t += 300300; //saros begins at waning crescent
-				t += (month - 1) * daysPerMonth;
-				t += day - 1;
-			}
+			t += (month - 1) * daysPerMonth;
 			
+			t += (day - 1);
+			
+		} else {
+			year = year + 1; 
+			
+			t += year * monthsPerYear * daysPerMonth;
+			t -= (monthsPerYear - month) * daysPerMonth;
+			t -= (daysPerMonth - day + 1);
 		}
 				
 		return t;
@@ -536,27 +501,27 @@ adezoTxt.src = "adezo-texture.png";
 	
 	function getEclipseString(OS, OC, OL, SC, SL, CL, OSC, OSL, OCL, SCL, OSCL) {
 		if (OS) {
-			return "<span class='green'>Smarda</span>-<span class='gray'>Protha</span>";
+			return "<span class='green'>" + moons.smarda.workingName + "</span>-<span class='gray'>" + moons.protha.workingName + "</span>";
 		} else if (OC) {
-			return "<span class='green'>Smarda</span>-<span class='red'>Tyratha</span>";
+			return "<span class='green'>" + moons.smarda.workingName + "</span>-<span class='red'>" + moons.tyratha.workingName + "</span>";
 		} else if (OL) {
-			return "<span class='green'>Smarda</span>-<span class='black'>Adezo</span>";
+			return "<span class='green'>" + moons.smarda.workingName + "</span>-<span class='black'>" + moons.adezo.workingName + "</span>";
 		} else if (SC) {
-			return "<span class='gray'>Protha</span>-<span class='red'>Tyratha</span>";
+			return "<span class='gray'>" + moons.protha.workingName + "</span>-<span class='red'>" + moons.tyratha.workingName + "</span>";
 		} else if (SL) {
-			return "<span class='gray'>Protha</span>-<span class='black'>Adezo</span>";
+			return "<span class='gray'>" + moons.protha.workingName + "</span>-<span class='black'>" + moons.adezo.workingName + "</span>";
 		} else if (CL) {
-			return "<span class='red'>Tyratha</span>-<span class='black'>Adezo</span>";
+			return "<span class='red'>" + moons.tyratha.workingName + "</span>-<span class='black'>" + moons.adezo.workingName + "</span>";
 		} else if (OSC) {
-			return "<span class='green'>Smarda</span>-<span class='gray'>Protha</span>-<span class='red'>Tyratha</span>";
+			return "<span class='green'>" + moons.smarda.workingName + "</span>-<span class='gray'>" + moons.protha.workingName + "</span>-<span class='red'>" + moons.tyratha.workingName + "</span>";
 		} else if (OSL) {
-			return "<span class='green'>Smarda</span>-<span class='gray'>Protha</span>-<span class='black'>Adezo</span>";
+			return "<span class='green'>" + moons.smarda.workingName + "</span>-<span class='gray'>" + moons.protha.workingName + "</span>-<span class='black'>" + moons.adezo.workingName + "</span>";
 		} else if (OCL) {
-			return "<span class='green'>Smarda</span>-<span class='red'>Tyratha</span>-<span class='black'>Adezo</span>";
+			return "<span class='green'>" + moons.smarda.workingName + "</span>-<span class='red'>" + moons.tyratha.workingName + "</span>-<span class='black'>" + moons.adezo.workingName + "</span>";
 		} else if (SCL) {
-			return "<span class='gray'>Protha</span>-<span class='red'>Tyratha</span>-<span class='black'>Adezo</span>";
+			return "<span class='gray'>" + moons.protha.workingName + "</span>-<span class='red'>" + moons.tyratha.workingName + "</span>-<span class='black'>" + moons.adezo.workingName + "</span>";
 		} else if (OSCL) {
-			return "<span class='green'>Smarda</span>-<span class='gray'>Protha</span>-<span class='red'>Tyratha</span>-<span class='black'>Adezo</span>";
+			return "<span class='green'>" + moons.smarda.workingName + "</span>-<span class='gray'>" + moons.protha.workingName + "</span>-<span class='red'>" + moons.tyratha.workingName + "</span>-<span class='black'>" + moons.adezo.workingName + "</span>";
 		} else {
 			return "";
 		}
@@ -564,14 +529,14 @@ adezoTxt.src = "adezo-texture.png";
 	
 	function calcPhase(pos, moon) {
 		if (moon == "o" || moon == "l") {
-			if (pos > 355 || pos < 5) { return "New Moon"; }
-			if (pos < 85) { return "Waxing Crescent"; }
-			if (pos < 95) { return "First Quarter"; }
-			if (pos < 175) { return "Waxing Gibbous"; }
-			if (pos < 185) { return "Full Moon"; }
-			if (pos < 265) { return "Waning Gibbous"; }
-			if (pos < 275) { return "Last Quarter"; }
-			if (pos < 355) { return "Waning Crescent"; }
+			if (pos > 358 || pos < 2) { return "New Moon"; }
+			if (pos < 88) { return "Waxing Crescent"; }
+			if (pos < 92) { return "First Quarter"; }
+			if (pos < 178) { return "Waxing Gibbous"; }
+			if (pos < 182) { return "Full Moon"; }
+			if (pos < 268) { return "Waning Gibbous"; }
+			if (pos < 272) { return "Last Quarter"; }
+			if (pos < 358) { return "Waning Crescent"; }
 		}
 		if (moon == "s" || moon == "c") {
 			if (pos > 355 || pos < 5) { return "New Moon"; }
@@ -586,51 +551,50 @@ adezoTxt.src = "adezo-texture.png";
 		else { return "invalid moon"; }
 	}
 	
+	function calcWeekday(t) {
+		t += workingCalendar.dayOffset;
+		let index = t % workingCalendar.weekdays.length;
+		$('#weekday').text(workingCalendar.weekdays[index]);
+	}
+	
 	function calculateMoons() {
 		
 		$('#errors').empty();
+		
+		let month = Number($('#month').val());
+		let day = Number($('#day').val());
+		let year = Number($('#year').val());
+		
+		if (year % 1 != 0) { $('#errors').append("Error: Non-Integer Years Not Allowed"); return; }
+		if (year == 0 && workingCalendar.startingYear != 0) { $('#errors').append("Error: No Year 0"); return; }
+		
 		$('#sinfo').empty();
 		$('#pinfo').empty();
 		$('#tinfo').empty();
 		$('#ainfo').empty();
 		$('#eclipsediv').empty();
 		
-		let month = Number($('#month').val());
-		let day = Number($('#day').val());
-		let year = Number($('#year').val());
-		let saros = Number($('#saros').val());
 		
-		if (year >= yearsPerSaros) {
-			$('#errors').append("<p>Error: After end of saros. " + yearsPerSaros + " years per saros.</p>");
-			if ((saros == 1) && (year <= (2 * yearsPerSaros))) {
-				$('#errors').append("<p>Equivalent to 2nd Saros " + (year - yearsPerSaros + 1) + "</p>"); 
-			}
-		} else if (year < 0) {
-			$('#errors').append("<p>Error: No negative years.</p>");
-			if (saros == 2 && (year >= (0 - yearsPerSaros))) {
-				$('#errors').append("<p>Equivalent to 1st Saros " + (year + yearsPerSaros) + "</p>");
-			}
-		} else {
+		let t = calcT(month, day, year);
 		
-			let t = calcT(month, day, year, saros, $('#biennial').prop("checked"));
+		let weekday = calcWeekday(t);
+	
+		let [olurisPos, syldricPos, caphrielPos, lysoPos] = calcPositions(t);
 		
-			let [olurisPos, syldricPos, caphrielPos, lysoPos] = calcPositions(t);
-			
-			let [os, oc, ol, sc, sl, cl] = calcDiffs(olurisPos, syldricPos, caphrielPos, lysoPos);
-			
-			let [OS, OC, OL, SC, SL, CL, OSC, OSL, OCL, SCL, OSCL] = calcEclipses(os, oc, ol, sc, sl, cl);
-			
-			let eclipseString = getEclipseString(OS, OC, OL, SC, SL, CL, OSC, OSL, OCL, SCL, OSCL);
-			$('#eclipsediv').append("<p>" + (eclipseString != "" ? "Eclipse: " : "") + eclipseString + "</p>");
-			
-			$('#sinfo').append(calcPhase(olurisPos, "o"));
-			$('#pinfo').append(calcPhase(syldricPos, "s"));
-			$('#tinfo').append(calcPhase(caphrielPos, "c"));
-			$('#ainfo').append(calcPhase(lysoPos, "l"));
-			repaint(spainter, olurisPos);
-			repaint(ppainter, syldricPos);
-			repaint(tpainter, caphrielPos);
-			repaint(apainter, lysoPos);
-		}
+		let [os, oc, ol, sc, sl, cl] = calcDiffs(olurisPos, syldricPos, caphrielPos, lysoPos);
+		
+		let [OS, OC, OL, SC, SL, CL, OSC, OSL, OCL, SCL, OSCL] = calcEclipses(os, oc, ol, sc, sl, cl);
+		
+		let eclipseString = getEclipseString(OS, OC, OL, SC, SL, CL, OSC, OSL, OCL, SCL, OSCL);
+		$('#eclipsediv').append("<p>" + (eclipseString != "" ? "Eclipse: " : "") + eclipseString + "</p>");
+		
+		$('#sinfo').append(calcPhase(olurisPos, "o"));
+		$('#pinfo').append(calcPhase(syldricPos, "s"));
+		$('#tinfo').append(calcPhase(caphrielPos, "c"));
+		$('#ainfo').append(calcPhase(lysoPos, "l"));
+		repaint(spainter, olurisPos);
+		repaint(ppainter, syldricPos);
+		repaint(tpainter, caphrielPos);
+		repaint(apainter, lysoPos);
 		
 	}	

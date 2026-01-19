@@ -1,0 +1,149 @@
+body {
+		background: #000;
+		color: #FFF;
+		font-size: 4.5vw;
+	}
+	
+div { 
+	text-align: center;
+}
+
+h1 {
+	text-align: center;
+	font-size: 7vw;
+}
+
+#planetoid {
+	width: 40vw;
+	text-align: center;
+	margin: auto;
+}
+
+#nav, #formdiv {
+	display: grid;
+	grid-template-columns: 1fr;
+}
+
+#nav {
+	padding-top: 1vw;
+}
+
+button, select, input {
+	font-size: 3vw;
+}
+
+.moondiv {
+	padding-left: 3vw;
+	padding-right: 3vw;
+	width: 40vw;
+}
+
+canvas {
+	width: 40vw;
+	height: 40vw;
+}
+
+.hidden { display: none;}
+
+.horizontal {
+	/*display:flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;*/
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+}
+
+.vertical {
+	display:flex;
+	flex-direction: column;
+	justify-content: left;
+	align-items: left;
+}
+
+.purple {
+	color: BlueViolet;
+}
+
+.green {
+	color: green;
+}
+
+.gray {
+	color: LightGray;
+}
+
+.red {
+	color: red;
+}
+
+@media screen and (width >= 600px) {
+	
+	body {
+		font-size:3.5vw;
+	}
+	
+	.horizontal {
+		grid-template-columns: repeat(4, 1fr);
+	}
+	
+	.moondiv {
+		width: 20vw;
+		padding-left: 2vw;
+		padding-right: 2vw;
+	}
+	
+	canvas {
+		width: 20vw;
+		height: 20vw;
+	}
+	
+	h1 {
+		font-size: 3.5vw;
+	}
+}
+
+@media screen and (width >= 700px) {
+	
+	body {
+		font-size: 2.5vw;
+	}
+	
+	button, select, input {
+	font-size: 2.5vw;
+	}
+	
+	#planetoid {
+		width: 20vw;
+	}
+	
+	#nav, #formdiv {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	
+}
+
+@media screen and (width >= 1000px) {
+	body {
+		font-size: 1.5vw;
+	}
+	
+	#formdiv {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	
+	#planetoid, #year {
+		width: 15vw;
+		margin: auto;
+	}
+	
+	button, select, input {
+		font-size: 1.5vw;
+	}
+	
+	h1 {
+		font-size: 2.5vw;
+	}
+}

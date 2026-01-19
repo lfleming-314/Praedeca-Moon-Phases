@@ -1,6 +1,6 @@
 body {
-		background: #000;
-		color: #FFF;
+		background: #FFF;
+		color: #000;
 		font-size: 4.5vw;
 	}
 	
@@ -13,7 +13,7 @@ h1 {
 	font-size: 7vw;
 }
 
-#planetoid {
+#calendar {
 	width: 40vw;
 	text-align: center;
 	margin: auto;
@@ -61,8 +61,8 @@ canvas {
 	align-items: left;
 }
 
-.purple {
-	color: BlueViolet;
+.black {
+	color: Black;
 }
 
 .green {
@@ -70,7 +70,7 @@ canvas {
 }
 
 .gray {
-	color: LightGray;
+	color: Gray;
 }
 
 .red {
@@ -113,7 +113,7 @@ canvas {
 	font-size: 2.5vw;
 	}
 	
-	#planetoid {
+	#calendar {
 		width: 20vw;
 	}
 	
@@ -134,7 +134,7 @@ canvas {
 		justify-content: center;
 	}
 	
-	#planetoid, #year {
+	#calendar, #year {
 		width: 15vw;
 		margin: auto;
 	}

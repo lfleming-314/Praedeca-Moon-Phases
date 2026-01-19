@@ -1,11 +1,24 @@
+const smardaTxt = new Image();
+smardaTxt.src = "smarda-texture.png";
+
+const tyrathaTxt = new Image();
+tyrathaTxt.src = "tyratha-texture.png";
+
+const prothaTxt = new Image();
+prothaTxt.src = "protha-texture.png";
+
+const adezoTxt = new Image();
+adezoTxt.src = "adezo-texture.png";
+
 // MoonPainter code modified from https://codepen.io/anowodzinski/pen/ZWKXPQ
-	function MoonPainter( canvas, color ) {
+	function MoonPainter( canvas, color, texture ) {
 		this.lineWidth = 10;
 		this.radius = canvas.width / 2 - this.lineWidth / 2;
 		this.offset = this.lineWidth / 2;
 
 		this.canvas = canvas;
 		this.color = color;
+		this.texture = texture;
 		this.ctx = canvas.getContext( '2d' );
 	}
 
@@ -15,7 +28,8 @@
 			this.ctx.beginPath();
 			this.ctx.arc( this.radius, this.radius, this.radius, 0, 2 * Math.PI, true );
 			this.ctx.closePath();
-			this.ctx.fillStyle = this.color;
+			this.pattern = this.ctx.createPattern(this.texture, "no-repeat");
+			this.ctx.fillStyle = this.pattern;
 			this.ctx.strokeStyle = this.color;
 			this.ctx.lineWidth = this.lineWidth;
 
@@ -27,7 +41,7 @@
 			this.ctx.beginPath();
 			this.ctx.arc( this.radius, this.radius, this.radius, -Math.PI/2, Math.PI/2, true );
 			this.ctx.closePath();
-			this.ctx.fillStyle = '#000';
+			this.ctx.fillStyle = '#FFF';
 			this.ctx.fill();
 
 			this.ctx.translate( this.radius, this.radius );
@@ -36,7 +50,8 @@
 			this.ctx.beginPath();
 			this.ctx.arc( this.radius, this.radius, this.radius, -Math.PI/2, Math.PI/2, true );
 			this.ctx.closePath();
-			this.ctx.fillStyle = phase > 0 ? this.color : '#000';
+			this.pattern = this.ctx.createPattern(this.texture, "no-repeat");
+			this.ctx.fillStyle = phase > 0 ? this.pattern : '#FFF';
 			this.ctx.fill();
 		},
 		
@@ -63,14 +78,13 @@
 		}
 	}
 
-
-	var opainter = new MoonPainter( document.getElementById( 'ocanvas' ), 'BlueViolet' );
-	var spainter = new MoonPainter( document.getElementById( 'scanvas' ), 'Green' );
-	var cpainter = new MoonPainter( document.getElementById( 'ccanvas' ), 'White' );
-	var lpainter = new MoonPainter( document.getElementById( 'lcanvas' ), 'Red' );
+	var spainter = new MoonPainter( document.getElementById( 'scanvas' ), 'Green', smardaTxt );
+	var ppainter = new MoonPainter( document.getElementById( 'pcanvas' ), 'Gray', prothaTxt );
+	var tpainter = new MoonPainter( document.getElementById( 'tcanvas' ), 'Red', tyrathaTxt );
+	var apainter = new MoonPainter( document.getElementById( 'acanvas' ), 'Black', adezoTxt );
 
 	function repaint(painter, currentPhase) {
-		if (document.getElementById('planetoid').value == "Salix") {
+		if (document.getElementById('calendar').value == "Salix") {
 			painter.paint( currentPhase/360 );
 		} else {
 			painter.paint( 1 - (currentPhase/360));
@@ -522,27 +536,27 @@
 	
 	function getEclipseString(OS, OC, OL, SC, SL, CL, OSC, OSL, OCL, SCL, OSCL) {
 		if (OS) {
-			return "<span class='purple'>Oluris</span>-<span class='green'>Syldric</span>";
+			return "<span class='green'>Smarda</span>-<span class='gray'>Protha</span>";
 		} else if (OC) {
-			return "<span class='purple'>Oluris</span>-<span class='gray'>Caphriel</span>";
+			return "<span class='green'>Smarda</span>-<span class='red'>Tyratha</span>";
 		} else if (OL) {
-			return "<span class='purple'>Oluris</span>-<span class='red'>Lyso</span>";
+			return "<span class='green'>Smarda</span>-<span class='black'>Adezo</span>";
 		} else if (SC) {
-			return "<span class='green'>Syldric</span>-<span class='gray'>Caphriel</span>";
+			return "<span class='gray'>Protha</span>-<span class='red'>Tyratha</span>";
 		} else if (SL) {
-			return "<span class='green'>Syldric</span>-<span class='red'>Lyso</span>";
+			return "<span class='gray'>Protha</span>-<span class='black'>Adezo</span>";
 		} else if (CL) {
-			return "<span class='gray'>Caphriel</span>-<span class='red'>Lyso</span>";
+			return "<span class='red'>Tyratha</span>-<span class='black'>Adezo</span>";
 		} else if (OSC) {
-			return "<span class='purple'>Oluris</span>-<span class='green'>Syldric</span>-<span class='gray'>Caphriel</span>";
+			return "<span class='green'>Smarda</span>-<span class='gray'>Protha</span>-<span class='red'>Tyratha</span>";
 		} else if (OSL) {
-			return "<span class='purple'>Oluris</span>-<span class='green'>Syldric</span>-<span class='red'>Lyso</span>";
+			return "<span class='green'>Smarda</span>-<span class='gray'>Protha</span>-<span class='black'>Adezo</span>";
 		} else if (OCL) {
-			return "<span class='purple'>Oluris</span>-<span class='gray'>Caphriel</span>-<span class='red'>Lyso</span>";
+			return "<span class='green'>Smarda</span>-<span class='red'>Tyratha</span>-<span class='black'>Adezo</span>";
 		} else if (SCL) {
-			return "<span class='green'>Syldric</span>-<span class='gray'>Caphriel</span>-<span class='red'>Lyso</span>";
+			return "<span class='gray'>Protha</span>-<span class='red'>Tyratha</span>-<span class='black'>Adezo</span>";
 		} else if (OSCL) {
-			return "<span class='purple'>Oluris</span>-<span class='green'>Syldric</span>-<span class='gray'>Caphriel</span>-<span class='red'>Lyso</span>";
+			return "<span class='green'>Smarda</span>-<span class='gray'>Protha</span>-<span class='red'>Tyratha</span>-<span class='black'>Adezo</span>";
 		} else {
 			return "";
 		}
@@ -575,10 +589,10 @@
 	function calculateMoons() {
 		
 		$('#errors').empty();
-		$('#oinfo').empty();
-		$('#cinfo').empty();
 		$('#sinfo').empty();
-		$('#linfo').empty();
+		$('#pinfo').empty();
+		$('#tinfo').empty();
+		$('#ainfo').empty();
 		$('#eclipsediv').empty();
 		
 		let month = Number($('#month').val());
@@ -609,14 +623,14 @@
 			let eclipseString = getEclipseString(OS, OC, OL, SC, SL, CL, OSC, OSL, OCL, SCL, OSCL);
 			$('#eclipsediv').append("<p>" + (eclipseString != "" ? "Eclipse: " : "") + eclipseString + "</p>");
 			
-			$('#oinfo').append(calcPhase(olurisPos, "o"));
-			$('#sinfo').append(calcPhase(syldricPos, "s"));
-			$('#cinfo').append(calcPhase(caphrielPos, "c"));
-			$('#linfo').append(calcPhase(lysoPos, "l"));
-			repaint(opainter, olurisPos);
-			repaint(spainter, syldricPos);
-			repaint(cpainter, caphrielPos);
-			repaint(lpainter, lysoPos);
+			$('#sinfo').append(calcPhase(olurisPos, "o"));
+			$('#pinfo').append(calcPhase(syldricPos, "s"));
+			$('#tinfo').append(calcPhase(caphrielPos, "c"));
+			$('#ainfo').append(calcPhase(lysoPos, "l"));
+			repaint(spainter, olurisPos);
+			repaint(ppainter, syldricPos);
+			repaint(tpainter, caphrielPos);
+			repaint(apainter, lysoPos);
 		}
 		
 	}	

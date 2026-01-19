@@ -495,11 +495,11 @@ $('#calendar').change(function () {
 	
 	function getEclipseString(OS, OC, OL, SC, SL, CL, OSC, OSL, OCL, SCL, OSCL) {
 		if (OS) {
-			return "<span class='green'>" + moons.smarda.workingName + "</span>-<span class='gray'>" + moons.protha.workingName + "</span>";
+			return "<span class='gray'>" + moons.protha.workingName + "</span>-<span class='green'>" + moons.smarda.workingName + "</span>";
 		} else if (OC) {
-			return "<span class='green'>" + moons.smarda.workingName + "</span>-<span class='red'>" + moons.tyratha.workingName + "</span>";
+			return "<span class='red'>" + moons.tyratha.workingName + "</span>-<span class='green'>" + moons.smarda.workingName + "</span>";
 		} else if (OL) {
-			return "<span class='green'>" + moons.smarda.workingName + "</span>-<span class='black'>" + moons.adezo.workingName + "</span>";
+			return "<span class='black'>" + moons.adezo.workingName + "</span>-<span class='green'>" + moons.smarda.workingName + "</span>";
 		} else if (SC) {
 			return "<span class='gray'>" + moons.protha.workingName + "</span>-<span class='red'>" + moons.tyratha.workingName + "</span>";
 		} else if (SL) {
@@ -507,15 +507,15 @@ $('#calendar').change(function () {
 		} else if (CL) {
 			return "<span class='red'>" + moons.tyratha.workingName + "</span>-<span class='black'>" + moons.adezo.workingName + "</span>";
 		} else if (OSC) {
-			return "<span class='green'>" + moons.smarda.workingName + "</span>-<span class='gray'>" + moons.protha.workingName + "</span>-<span class='red'>" + moons.tyratha.workingName + "</span>";
+			return "<span class='gray'>" + moons.protha.workingName + "</span>-<span class='red'>" + moons.tyratha.workingName + "</span>-<span class='green'>" + moons.smarda.workingName + "</span>";
 		} else if (OSL) {
-			return "<span class='green'>" + moons.smarda.workingName + "</span>-<span class='gray'>" + moons.protha.workingName + "</span>-<span class='black'>" + moons.adezo.workingName + "</span>";
+			return "<span class='gray'>" + moons.protha.workingName + "</span>-<span class='black'>" + moons.adezo.workingName + "</span>-<span class='green'>" + moons.smarda.workingName + "</span>";
 		} else if (OCL) {
-			return "<span class='green'>" + moons.smarda.workingName + "</span>-<span class='red'>" + moons.tyratha.workingName + "</span>-<span class='black'>" + moons.adezo.workingName + "</span>";
+			return "<span class='red'>" + moons.tyratha.workingName + "</span>-<span class='black'>" + moons.adezo.workingName + "</span>-<span class='green'>" + moons.smarda.workingName + "</span>";
 		} else if (SCL) {
 			return "<span class='gray'>" + moons.protha.workingName + "</span>-<span class='red'>" + moons.tyratha.workingName + "</span>-<span class='black'>" + moons.adezo.workingName + "</span>";
 		} else if (OSCL) {
-			return "<span class='green'>" + moons.smarda.workingName + "</span>-<span class='gray'>" + moons.protha.workingName + "</span>-<span class='red'>" + moons.tyratha.workingName + "</span>-<span class='black'>" + moons.adezo.workingName + "</span>";
+			return "<span class='gray'>" + moons.protha.workingName + "</span>-<span class='red'>" + moons.tyratha.workingName + "</span>-<span class='black'>" + moons.adezo.workingName + "</span>-<span class='green'>" + moons.smarda.workingName + "</span>";
 		} else {
 			return "";
 		}

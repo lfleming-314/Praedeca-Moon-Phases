@@ -1,6 +1,7 @@
 const atyniaCalendar = {
 	startingYear: 1,
 	months: ["Protanox", "Deftanox", "Tritanox", "Tertanox", "Prokalok", "Defkalok", "Trikalok", "Terkalok", "Prothin", "Defthin", "Trithin", "Terthin", "Prochem", "Defchem", "Trichem", "Terchem"],
+	monthOffset: 4,
 	monthLength: 25,
 	weekdays: ["Othirhal", "Malehal", "Lukahal", "Bahrohal", "Laevohal", "Suyasarhal", "Saldrehal", "Kralorhal"],
 	dayOffset: 0
@@ -9,16 +10,17 @@ const atyniaCalendar = {
 const standardCalendar = {
 	startingYear: 1,
 	months: ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"],
+	monthOffset: 0,
 	monthLength: 40,
 	weekdays: ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"],
 	dayOffset: 0
 };
 
 const moons = {
-	smarda: {orbit: 25, offset: 0, celestial: "Eovena", draconic: "Ainissa", atyniaDraconic: "Smarda", color: '#548235', direction: '1', workingName: ""},
-	protha: {orbit: 40, offset: 0, celestial: "Arsomna", draconic: "Protha", color: '#A5A5A5', direction: '1', workingName: ""},
-	tyratha: {orbit: 80, offset: 0, celestial: "Gilvida", draconic: "Tyratha", color: '#C00000', direction: '1', workingName: ""},
-	adezo: {orbit: 401, offset: 0, celestial: "Halmenda", draconic: "Adezo", color: '#a341aa', direction: '1', workingName: ""}
+	smarda: {orbit: 25, offset: 12.5, celestial: "Eovena", draconic: "Ainissa", atyniaDraconic: "Smarda", color: '#548235', direction: '1', workingName: ""},
+	protha: {orbit: 40, offset: 20, celestial: "Arsomna", draconic: "Protha", color: '#A5A5A5', direction: '1', workingName: ""},
+	tyratha: {orbit: 80, offset: 40, celestial: "Gilvida", draconic: "Tyratha", color: '#C00000', direction: '1', workingName: ""},
+	adezo: {orbit: 401, offset: 200.5, celestial: "Halmenda", draconic: "Adezo", color: '#a341aa', direction: '1', workingName: ""}
 };
 
 const smardaTxt = new Image();
@@ -73,7 +75,7 @@ $('#nameset').change(function() {
 let workingCalendar = $('#calendar').val() == "atynia" ? atyniaCalendar : standardCalendar;
 let numMonths = workingCalendar.months.length;
 for (let i = 0; i < numMonths; i++) {
-	$('#month').append(new Option(workingCalendar.months[i], i+1));
+	$('#month').append(new Option(workingCalendar.months[i], (i+1+workingCalendar.monthOffset) % numMonths));
 }
 for (let i = 0; i < workingCalendar.monthLength; i++) {
 	$('#day').append(new Option(i+1, i+1));
@@ -86,7 +88,7 @@ $('#calendar').change(function () {
 	$('#month').empty();
 	let numMonths = workingCalendar.months.length;
 	for (let i = 0; i < numMonths; i++) {
-		$('#month').append(new Option(workingCalendar.months[i], i+1));
+		$('#month').append(new Option(workingCalendar.months[i], (i+1+workingCalendar.monthOffset) % numMonths));
 	}
 	$('#day').empty();
 	for (let i = 0; i < workingCalendar.monthLength; i++) {
@@ -245,7 +247,7 @@ $('#calendar').change(function () {
 		let t = calcT(month, day, year);
 		
 		let found = false;
-		while (!found) {
+		while (!found && t < 20000000) {
 			t --;
 			let [olurisPos, syldricPos, caphrielPos, lysoPos] = calcPositions(t);
 			let [os, oc, ol, sc, sl, cl] = calcDiffs(olurisPos, syldricPos, caphrielPos, lysoPos);
@@ -265,7 +267,7 @@ $('#calendar').change(function () {
 		let t = calcT(month, day, year);
 		
 		let found = false;
-		while (!found) {
+		while (!found && t > -20000000) {
 			t ++;
 			let [olurisPos, syldricPos, caphrielPos, lysoPos] = calcPositions(t);
 			let [os, oc, ol, sc, sl, cl] = calcDiffs(olurisPos, syldricPos, caphrielPos, lysoPos);
@@ -285,7 +287,7 @@ $('#calendar').change(function () {
 		let t = calcT(month, day, year);
 		
 		let found = false;
-		while (t >= 300300 && !found) {
+		while (!found) {
 			t --;
 			let [olurisPos, syldricPos, caphrielPos, lysoPos] = calcPositions(t);
 			let [os, oc, ol, sc, sl, cl] = calcDiffs(olurisPos, syldricPos, caphrielPos, lysoPos);
@@ -520,27 +522,15 @@ $('#calendar').change(function () {
 	}
 	
 	function calcPhase(pos, moon) {
-		if (moon == "o" || moon == "l") {
-			if (pos > 358 || pos < 2) { return "New Moon"; }
-			if (pos < 88) { return "Waxing Crescent"; }
-			if (pos < 92) { return "First Quarter"; }
-			if (pos < 178) { return "Waxing Gibbous"; }
-			if (pos < 182) { return "Full Moon"; }
-			if (pos < 268) { return "Waning Gibbous"; }
-			if (pos < 272) { return "Last Quarter"; }
-			if (pos < 358) { return "Waning Crescent"; }
-		}
-		if (moon == "s" || moon == "c") {
-			if (pos > 355 || pos < 5) { return "New Moon"; }
-			if (pos < 85) { return "Waning Crescent"; }
-			if (pos < 95) { return "Last Quarter"; }
-			if (pos < 175) { return "Waning Gibbous"; }
-			if (pos < 185) { return "Full Moon"; }
-			if (pos < 265) { return "Waxing Gibbous"; }
-			if (pos < 275) { return "First Quarter"; }
-			if (pos < 355) { return "Waxing Crescent"; }
-		}
-		else { return "invalid moon"; }
+		console.log(moon, pos);
+		if (pos == 360 || pos == 0) { return "New Moon"; }
+		if (pos < 90) { return "Waxing Crescent"; }
+		if (pos == 90) { return "First Quarter"; }
+		if (pos < 179) { return "Waxing Gibbous"; }
+		if (pos < 180.5) { return "Full Moon"; }
+		if (pos < 270) { return "Waning Gibbous"; }
+		if (pos == 270) { return "Last Quarter"; }
+		if (pos < 360) { return "Waning Crescent"; }
 	}
 	
 	function calcWeekday(t) {

@@ -16,13 +16,6 @@ const standardCalendar = {
 	dayOffset: 0
 };
 
-const moons = {
-	smarda: {orbit: 25, offset: 12.5, celestial: "Eovena", draconic: "Ainissa", atyniaDraconic: "Smarda", color: '#548235', direction: '1', workingName: ""},
-	protha: {orbit: 40, offset: 20, celestial: "Arsomna", draconic: "Protha", color: '#A5A5A5', direction: '1', workingName: ""},
-	tyratha: {orbit: 80, offset: 40, celestial: "Gilvida", draconic: "Tyratha", color: '#C00000', direction: '1', workingName: ""},
-	adezo: {orbit: 401, offset: 200.5, celestial: "Halmenda", draconic: "Adezo", color: '#a341aa', direction: '1', workingName: ""}
-};
-
 const smardaTxt = new Image();
 smardaTxt.src = "smarda-texture.png";
 
@@ -34,6 +27,17 @@ prothaTxt.src = "protha-texture.png";
 
 const adezoTxt = new Image();
 adezoTxt.src = "adezo-texture.png";
+
+adezoTxt.addEventListener('load', function() { calculateMoons(); }, false);
+
+const moons = {
+	smarda: {orbit: 25, offset: 12.5, celestial: "Eovena", draconic: "Ainissa", atyniaDraconic: "Smarda", color: '#548235', direction: '1', workingName: "", texture: smardaTxt, painter: false, initial:'s'},
+	protha: {orbit: 40, offset: 20, celestial: "Arsomna", draconic: "Protha", color: '#A5A5A5', direction: '1', workingName: "", texture: prothaTxt, painter: false, initial:'p'},
+	tyratha: {orbit: 80, offset: 40, celestial: "Gilvida", draconic: "Tyratha", color: '#C00000', direction: '1', workingName: "", texture: tyrathaTxt, painter: false, initial:'t'},
+	adezo: {orbit: 401, offset: 200.5, celestial: "Halmenda", draconic: "Adezo", color: '#a341aa', direction: '1', workingName: "", texture: adezoTxt, painter: false, initial:'a'}
+};
+
+
 
 //initialize moon name labels
 if ($('#nameset').val() == "draconic") {
@@ -111,47 +115,91 @@ $('#calendar').change(function () {
 
 // MoonPainter code modified from https://codepen.io/anowodzinski/pen/ZWKXPQ
 	function MoonPainter( canvas, color, texture ) {
+		this.width = canvas.width;
+		this.height = canvas.height;
 		this.lineWidth = 10;
 		this.radius = canvas.width / 2 - this.lineWidth / 2;
+		this.phaseRadius = this.radius - this.lineWidth / 2;
 		this.offset = this.lineWidth / 2;
 
 		this.canvas = canvas;
 		this.color = color;
-		this.texture = texture;
 		this.ctx = canvas.getContext( '2d' );
+
+		this.canvas1 = document.createElement('canvas');
+		this.canvas1.width = this.width;
+		this.canvas1.height = this.height;
+		this.canvas1.style.display = "none";
+		this.ctx1 = this.canvas1.getContext('2d');
+
+		this.canvas2 = document.createElement('canvas');
+		this.canvas2.width = this.width;
+		this.canvas2.height = this.height;
+		this.canvas2.style.display = "none";
+		this.ctx2 = this.canvas2.getContext('2d');
+
+		this.pattern = this.color;
+		this.texture = texture;
 	}
 
 	MoonPainter.prototype = {
-		_drawDisc: function() {
+		_drawDisc: function(phase) {
+			this.ctx2.translate( this.offset, this.offset ) ;
+			this.ctx2.beginPath();
+			this.ctx2.arc( this.radius, this.radius, this.radius, 0, 2 * Math.PI, true );
+			this.ctx2.closePath();
+			if (this.pattern == this.color && this.texture.complete) {
+				this.pattern = this.ctx1.createPattern(this.texture, "no-repeat");
+			}
+			this.ctx2.fillStyle = this.pattern;
+			this.ctx2.fill();			
+
+			if (phase <= 0.5) {
+				this.ctx2.globalCompositeOperation = 'destination-out';
+			} else {
+				this.ctx2.globalCompositeOperation = 'destination-in';
+			}
+			this.ctx2.drawImage(this.canvas1, 0, 0);
+		},
+
+		_drawOutline: function() {
+			this.ctx.drawImage(this.canvas2, 0, 0);
 			this.ctx.translate( this.offset, this.offset ) ;
 			this.ctx.beginPath();
 			this.ctx.arc( this.radius, this.radius, this.radius, 0, 2 * Math.PI, true );
 			this.ctx.closePath();
-			this.pattern = this.ctx.createPattern(this.texture, "no-repeat");
-			this.ctx.fillStyle = this.pattern;
-			this.ctx.strokeStyle = this.color;
 			this.ctx.lineWidth = this.lineWidth;
-
-			this.ctx.fill();			
+			this.ctx.strokeStyle = this.color;
 			this.ctx.stroke();
 		},
 
 		_drawPhase: function( phase ) {
-			this.ctx.beginPath();
-			this.ctx.arc( this.radius, this.radius, this.radius, -Math.PI/2, Math.PI/2, true );
-			this.ctx.closePath();
-			this.ctx.fillStyle = '#FFF';
-			this.ctx.fill();
+			if (phase <= 0.5) {
+				phase = 0.25 - phase;
+			} else {
+				phase = 0.75 - phase
+			}
+			phase *= -4;
 
-			this.ctx.translate( this.radius, this.radius );
-			this.ctx.scale( phase, 1 );
-			this.ctx.translate( -this.radius, -this.radius );
-			this.ctx.beginPath();
-			this.ctx.arc( this.radius, this.radius, this.radius, -Math.PI/2, Math.PI/2, true );
-			this.ctx.closePath();
-			this.pattern = this.ctx.createPattern(this.texture, "no-repeat");
-			this.ctx.fillStyle = phase > 0 ? this.pattern : '#FFF';
-			this.ctx.fill();
+			this.ctx1.beginPath();
+			this.ctx1.arc( this.radius, this.radius, this.phaseRadius, -Math.PI/2, Math.PI/2, true );
+			this.ctx1.fill();
+
+			this.ctx1.translate( this.radius, this.radius );
+			this.ctx1.scale( phase, 1 );
+			this.ctx1.translate( -this.radius, -this.radius );
+			this.ctx1.beginPath();
+			this.ctx1.arc( this.radius, this.radius, this.radius, -Math.PI/2, Math.PI/2, true );
+			
+			if (phase > 0) {
+				this.ctx1.globalCompositeOperation = 'destination-out';
+			} else {
+				this.ctx1.globalCompositeOperation = 'source-over';
+			}
+			
+			this.ctx1.closePath();
+			this.ctx1.fillStyle = '#000';
+			this.ctx1.fill();
 		},
 		
 		/**
@@ -160,34 +208,29 @@ $('#calendar').change(function () {
 		paint( phase ) {
 			this.ctx.save();
 			this.ctx.clearRect( 0, 0, this.canvas.width, this.canvas.height );
+			this.ctx1.save();
+			this.ctx1.clearRect( 0, 0, this.canvas.width, this.canvas.height );
+			this.ctx2.save();
+			this.ctx2.clearRect( 0, 0, this.canvas.width, this.canvas.height );
 
-			if ( phase <= 0.5 ) {
-				this._drawDisc();
-				this._drawPhase( 4 * phase - 1 );
-			} else {
-				this.ctx.translate( this.radius + 2 * this.offset, this.radius + 2 * this.offset );
-				this.ctx.rotate( Math.PI );
-				this.ctx.translate( -this.radius, -this.radius );
+			this._drawPhase( phase );
+			this._drawDisc( phase );
+			this._drawOutline();
 
-				this._drawDisc();
-				this._drawPhase( 4 * ( 1 - phase ) - 1 );
-			}
-
-			this.ctx.restore();		
+			this.ctx.restore();	
+			this.ctx1.restore();
+			this.ctx2.restore();	
 		}
 	}
 
-	var spainter = new MoonPainter( document.getElementById( 'scanvas' ), moons.smarda.color, smardaTxt );
-	var ppainter = new MoonPainter( document.getElementById( 'pcanvas' ), moons.protha.color, prothaTxt );
-	var tpainter = new MoonPainter( document.getElementById( 'tcanvas' ), moons.tyratha.color, tyrathaTxt );
-	var apainter = new MoonPainter( document.getElementById( 'acanvas' ), moons.adezo.color, adezoTxt );
+	Object.values(moons).forEach(moon => {
+		moon.painter = new MoonPainter(document.getElementById(moon.initial + 'canvas'), moon.color, moon.texture);
+		console.log(moon.workingName + " painter initialized");
+	});
+	
 
-	function repaint(painter, currentPhase) {
-		if (document.getElementById('calendar').value == "Salix") {
-			painter.paint( currentPhase/360 );
-		} else {
-			painter.paint( 1 - (currentPhase/360));
-		}
+	function repaint(moon, currentPhase) {
+		moon.painter.paint( 1 - (currentPhase/360));
 	}
 	
 	let daysPerMonth = 28;
@@ -249,8 +292,8 @@ $('#calendar').change(function () {
 		let found = false;
 		while (!found && t < 20000000) {
 			t --;
-			let [olurisPos, syldricPos, caphrielPos, lysoPos] = calcPositions(t);
-			let [os, oc, ol, sc, sl, cl] = calcDiffs(olurisPos, syldricPos, caphrielPos, lysoPos);
+			let [smardaPos, prothaPos, tyrathaPos, adezoPos] = calcPositions(t);
+			let [os, oc, ol, sc, sl, cl] = calcDiffs(smardaPos, prothaPos, tyrathaPos, adezoPos);
 			let [OS, OC, OL, SC, SL, CL, OSC, OSL, OCL, SCL, OSCL] = calcEclipses(os, oc, ol, sc, sl, cl);
 			
 			if (OS || OC || OL || SC || SL || CL || OSC || OSL || OCL || SCL || OSCL) {
@@ -269,8 +312,8 @@ $('#calendar').change(function () {
 		let found = false;
 		while (!found && t > -20000000) {
 			t ++;
-			let [olurisPos, syldricPos, caphrielPos, lysoPos] = calcPositions(t);
-			let [os, oc, ol, sc, sl, cl] = calcDiffs(olurisPos, syldricPos, caphrielPos, lysoPos);
+			let [smardaPos, prothaPos, tyrathaPos, adezoPos] = calcPositions(t);
+			let [os, oc, ol, sc, sl, cl] = calcDiffs(smardaPos, prothaPos, tyrathaPos, adezoPos);
 			let [OS, OC, OL, SC, SL, CL, OSC, OSL, OCL, SCL, OSCL] = calcEclipses(os, oc, ol, sc, sl, cl);
 			
 			if (OS || OC || OL || SC || SL || CL || OSC || OSL || OCL || SCL || OSCL) {
@@ -289,8 +332,8 @@ $('#calendar').change(function () {
 		let found = false;
 		while (!found) {
 			t --;
-			let [olurisPos, syldricPos, caphrielPos, lysoPos] = calcPositions(t);
-			let [os, oc, ol, sc, sl, cl] = calcDiffs(olurisPos, syldricPos, caphrielPos, lysoPos);
+			let [smardaPos, prothaPos, tyrathaPos, adezoPos] = calcPositions(t);
+			let [os, oc, ol, sc, sl, cl] = calcDiffs(smardaPos, prothaPos, tyrathaPos, adezoPos);
 			let [OS, OC, OL, SC, SL, CL, OSC, OSL, OCL, SCL, OSCL] = calcEclipses(os, oc, ol, sc, sl, cl);
 			
 			if (OSC || OSL || OCL || SCL || OSCL) {
@@ -309,8 +352,8 @@ $('#calendar').change(function () {
 		let found = false;
 		while (!found) {
 			t ++;
-			let [olurisPos, syldricPos, caphrielPos, lysoPos] = calcPositions(t);
-			let [os, oc, ol, sc, sl, cl] = calcDiffs(olurisPos, syldricPos, caphrielPos, lysoPos);
+			let [smardaPos, prothaPos, tyrathaPos, adezoPos] = calcPositions(t);
+			let [os, oc, ol, sc, sl, cl] = calcDiffs(smardaPos, prothaPos, tyrathaPos, adezoPos);
 			let [OS, OC, OL, SC, SL, CL, OSC, OSL, OCL, SCL, OSCL] = calcEclipses(os, oc, ol, sc, sl, cl);
 			
 			if (OSC || OSL || OCL || SCL || OSCL) {
@@ -422,13 +465,13 @@ $('#calendar').change(function () {
 		return t;
 	}
 	
-	function calcDiffs(olurisPos, syldricPos, caphrielPos, lysoPos) {
-		let os = olurisPos - syldricPos;
-		let oc = olurisPos - caphrielPos;
-		let ol = olurisPos - lysoPos;
-		let sc = syldricPos - caphrielPos;
-		let sl = syldricPos - lysoPos;
-		let cl = caphrielPos - lysoPos;
+	function calcDiffs(smardaPos, prothaPos, tyrathaPos, adezoPos) {
+		let os = smardaPos - prothaPos;
+		let oc = smardaPos - tyrathaPos;
+		let ol = smardaPos - adezoPos;
+		let sc = prothaPos - tyrathaPos;
+		let sl = prothaPos - adezoPos;
+		let cl = tyrathaPos - adezoPos;
 		return [os, oc, ol, sc, sl, cl];
 	}
 	
@@ -561,22 +604,27 @@ $('#calendar').change(function () {
 		
 		let weekday = calcWeekday(t);
 	
-		let [olurisPos, syldricPos, caphrielPos, lysoPos] = calcPositions(t);
+		let [smardaPos, prothaPos, tyrathaPos, adezoPos] = calcPositions(t);
 		
-		let [os, oc, ol, sc, sl, cl] = calcDiffs(olurisPos, syldricPos, caphrielPos, lysoPos);
+		let [os, oc, ol, sc, sl, cl] = calcDiffs(smardaPos, prothaPos, tyrathaPos, adezoPos);
 		
 		let [OS, OC, OL, SC, SL, CL, OSC, OSL, OCL, SCL, OSCL] = calcEclipses(os, oc, ol, sc, sl, cl);
 		
 		let eclipseString = getEclipseString(OS, OC, OL, SC, SL, CL, OSC, OSL, OCL, SCL, OSCL);
 		$('#eclipsediv').append("<p>" + (eclipseString != "" ? "Eclipse: " : "") + eclipseString + "</p>");
 		
-		$('#sinfo').append(calcPhase(olurisPos, "o"));
-		$('#pinfo').append(calcPhase(syldricPos, "s"));
-		$('#tinfo').append(calcPhase(caphrielPos, "c"));
-		$('#ainfo').append(calcPhase(lysoPos, "l"));
-		repaint(spainter, olurisPos);
-		repaint(ppainter, syldricPos);
-		repaint(tpainter, caphrielPos);
-		repaint(apainter, lysoPos);
+		$('#sinfo').append(calcPhase(smardaPos, "o"));
+		$('#pinfo').append(calcPhase(prothaPos, "s"));
+		$('#tinfo').append(calcPhase(tyrathaPos, "c"));
+		$('#ainfo').append(calcPhase(adezoPos, "l"));
+		
+		if(!moons.smarda.painter || !moons.protha.painter || !moons.tyratha.painter || !moons.adezo.painter) {
+			$('#errors').append("Error: Moon textures not loaded yet");
+			return;
+		}
+		repaint(moons.smarda, smardaPos);
+		repaint(moons.protha, prothaPos);
+		repaint(moons.tyratha, tyrathaPos);
+		repaint(moons.adezo, adezoPos);
 		
 	}	

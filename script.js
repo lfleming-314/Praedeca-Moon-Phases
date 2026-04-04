@@ -9,10 +9,10 @@ const atyniaCalendar = {
 
 const standardCalendar = {
 	startingYear: 1,
-	months: ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"],
+	months: ["Vigiluna", "Fortiluna", "Vinceluna", "Regaluna", "Cantaluna", "Condiluna", "Artiluna", "Fatiluna", "Nautaluna", "Veneluna"],
 	monthOffset: 0,
 	monthLength: 40,
-	weekdays: ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"],
+	weekdays: ["Kralorde", "Athyde", "Holade", "Sokkode", "Melde", "Xolade", "Darkade", "Velde", "Zovande", "Dominde"],
 	dayOffset: 0
 };
 
